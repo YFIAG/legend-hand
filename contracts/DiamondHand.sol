@@ -35,7 +35,7 @@ contract Legend is Ownable, ReentrancyGuard {
     PoolInfo[] public poolInfo;
     /// @notice pool config setting
     mapping(uint256 => PoolSetting) public poolSetting;
-    uint256 MAX_APY = 100;
+    uint256 MAX_APY = 10000;
     uint256 private constant ACC_YFIAG_PRECISION = 1e12; // 6 digit after comma
     uint256 public allClaimed = 0;
     event Deposit(address indexed user, uint256 amount);
@@ -73,10 +73,10 @@ contract Legend is Ownable, ReentrancyGuard {
     constructor(address _YFIAG, address _TREASURY) public {
         YFIAG = IERC20(_YFIAG);
         TREASURY = _TREASURY;
-        poolSetting[0] = PoolSetting({duration: 2 minutes, apy: 2});
-        poolSetting[1] = PoolSetting({duration: 5 minutes, apy: 10});
-        poolSetting[2] = PoolSetting({duration: 10 minutes, apy: 30});
-        poolSetting[3] = PoolSetting({duration: 15 minutes, apy: 60});
+        poolSetting[0] = PoolSetting({duration: 5 minutes, apy: 50});
+        poolSetting[1] = PoolSetting({duration: 10 minutes, apy: 200});
+        poolSetting[2] = PoolSetting({duration: 15 minutes, apy: 700});
+        poolSetting[3] = PoolSetting({duration: 20 minutes, apy: 2000});
     }
 
     /// @notice Returns the number of pools.
@@ -166,7 +166,7 @@ contract Legend is Ownable, ReentrancyGuard {
         uint256 apy = poolSetting[_poolSetting].apy;
         uint256 duration = poolSetting[_poolSetting].duration;
         require(apy > 0 && apy <= MAX_APY, "Legend::addPool bad apy");
-        uint256 reward = _amount.mul(apy).div(100).mul(ACC_YFIAG_PRECISION);
+        uint256 reward = _amount.mul(apy).mul(ACC_YFIAG_PRECISION.div(MAX_APY);
         poolInfo.push(
             PoolInfo({
                 amount: _amount,
